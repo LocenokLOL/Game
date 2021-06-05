@@ -14,16 +14,15 @@ namespace WindowsFormsApp1
     {
         bool goLeft, goRight, jumping,isGameOver;
 
-        int jumpSpeed = 12;
-        int force= 16 ;
-        int playerSpeed = 10;
-        int enemyOneSpeed = 9;
-        int enemyTwoSpeed = 6;
-        int enemyThreeSpeed = -6;
-        int enemyFourSpeed = -6;
-        int enemyFifthSpeed = -3;
-        int coinsCount = 0;
-        bool spawnEnemyFlag = true;
+        int jumpSpeed = 12;//скорость прыжка
+        int force= 16 ;// сила, которая понадобиться для воссоздания гравитации
+        int playerSpeed = 10;//скорость персонажа
+        int enemyOneSpeed = 9;//скорость первого противника
+        int enemyTwoSpeed = 6;//второго
+        int enemyThreeSpeed = -6;//третьего
+        int enemyFourSpeed = -6;//четвертого
+        int enemyFifthSpeed = -3;//пятого
+        int coinsCount = 0;// переменная для подсчета монеток
 
 
         int horisonatalSpeed = 5;
@@ -32,6 +31,7 @@ namespace WindowsFormsApp1
         {
             InitializeComponent();
         }
+        //спавним наши ловушки по определенным координатам
         public void SpawnTraps()
         {
             trap1.Left = 279;
@@ -81,15 +81,16 @@ namespace WindowsFormsApp1
             enemy5.Top = 440;
             enemy5.Visible = true;
         }
+        // таймер оснвной для игры
         private void MAinGameTimer(object sender, EventArgs e)
         {
             player.Top += jumpSpeed;
-            
-            if (goLeft == true)
+            //идем влево при нажатии на кнопку
+             if (goLeft == true)
             {
                 player.Left -= playerSpeed;
             }
-
+            // идем вправо по кнопке
             if (goRight == true)
             {
                 player.Left += playerSpeed;
@@ -109,12 +110,12 @@ namespace WindowsFormsApp1
             {
                 jumpSpeed = 15;
             }
-
+            //в это блоке смотрим с чем пересекаеться наш персонаж
             foreach (Control x in this.Controls)
             {
                 if (x is PictureBox && x.Tag != null)
                 {
-
+                    //для платформы
                     if (x.Tag.ToString() == "platform")
                     {
                         if (player.Bounds.IntersectsWith(x.Bounds))
@@ -124,7 +125,7 @@ namespace WindowsFormsApp1
                         }
                        x.BringToFront();
                     }
-
+                    //для ловушек
                     if (x.Tag.ToString() == "trap")
                     {
                         if (player.Bounds.IntersectsWith(x.Bounds))
@@ -135,7 +136,7 @@ namespace WindowsFormsApp1
                             label1.Text = "You died!";
                         }
                     }
-
+                    //для противников
                     if (x.Tag.ToString() == "enemy")
                     {
                         if (player.Bounds.IntersectsWith(x.Bounds))
@@ -146,7 +147,7 @@ namespace WindowsFormsApp1
                             label1.Text = "You died!";
                         }
                     }
-
+                    //для двери выхода
                     if (x.Tag.ToString() == "door" && coinsCount == 3)
                     {
                         if (player.Bounds.IntersectsWith(x.Bounds))
@@ -157,7 +158,7 @@ namespace WindowsFormsApp1
                             label1.Text = "Game is complete!";
                         }
                     }
-
+                    // для монеток
                     if (x.Tag.ToString() == "coin")
                     {
                         if (player.Bounds.IntersectsWith(x.Bounds))
@@ -189,7 +190,7 @@ namespace WindowsFormsApp1
                 }
                 
             }
-
+            // в следующем блоке идет движение противников
             enemy1.Left -= enemyOneSpeed;
             if (enemy1.Left < platform2.Left || enemy1.Left + enemy1.Width > platform2.Left + platform2.Width)
             {
@@ -224,7 +225,7 @@ namespace WindowsFormsApp1
                 verticalSpeed = -verticalSpeed;
             }
         }
-
+        //блок для нажатых кнопок
         private void Keyisdown(object sender, KeyEventArgs e)
         {
             
@@ -242,7 +243,7 @@ namespace WindowsFormsApp1
                 jumping = true;
             }
         }
-
+        // соотвественно метод для готовых кнопок
         private void KeyisUp(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Left)
@@ -261,6 +262,7 @@ namespace WindowsFormsApp1
             if (e.KeyCode == Keys.Enter)
                 RestartGame();
         }
+        //метод для перезапуска игры
         private void RestartGame()
         {
             jumping = false;
@@ -281,6 +283,7 @@ namespace WindowsFormsApp1
                 coin3.Visible = true;
                 spawnEnemyFlag = false;
             }
+            //спавним нашего персонажа на определенном месте
             player.Left = 12;
             player.Top = 540;
             gameTimer.Start();
